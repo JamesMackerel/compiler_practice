@@ -1,8 +1,4 @@
-class Dual:
-    def __init__(self, dual_type: int, content: str):
-        self.dual_type = dual_type
-        self.content = str
-
+from typing import List, Tuple
 
 TYPE = {
     'begin': 1,
@@ -73,18 +69,19 @@ class Source:
             self.c -= 1
 
 
-table = []  # type:tuple
-
-
-def lex():
-    global table
-    source = Source('test.pas')
+def lex(source_path: str) -> List[Tuple]:
+    """
+    :param source_path: path to the source code file
+    :return:
+    """
+    lex_table = []  # type:tuple
+    source = Source(source_path)
     while True:
         ch = source.get()
         if ch in ['\n', '\r', ' ']:
             continue
         if ch is None:
-            return
+            return lex_table
 
         buffer = []
         if ch.isalpha():
@@ -101,7 +98,7 @@ def lex():
                 res = (TYPE[''.join(buffer).lower()], ''.join(buffer).lower())
             except KeyError:
                 res = (TYPE['ID'], ''.join(buffer))
-            table.append(res)
+            lex_table.append(res)
 
         elif ch.isdigit():
             buffer.append(ch)
@@ -111,55 +108,55 @@ def lex():
                 ch = source.get()
 
             source.back()
-            table.append((TYPE['INT'], int(''.join(buffer))))
+            lex_table.append((TYPE['INT'], int(''.join(buffer))))
 
-        else:
+        else:  # not a identifier or number
             if ch == '<':
                 ch = source.get()
                 if ch == '=':
-                    table.append((TYPE['LE'], ch))
+                    lex_table.append((TYPE['LE'], ch))
                 elif ch == '>':
-                    table.append((TYPE['NE'], ch))
+                    lex_table.append((TYPE['NE'], ch))
                 else:
                     source.back()
-                    table.append((TYPE['LT'], ch))
+                    lex_table.append((TYPE['LT'], ch))
                     continue
 
             elif ch == '=':
-                table.append((TYPE['EQ'], ch))
+                lex_table.append((TYPE['EQ'], ch))
             elif ch == '>':
                 ch = source.get()
                 if ch == '=':
-                    table.append((TYPE['GE'], ch))
+                    lex_table.append((TYPE['GE'], ch))
                 else:
                     source.back()
-                    table.append((TYPE['GT'], ch))
+                    lex_table.append((TYPE['GT'], ch))
                     continue
             elif ch == ':':
                 ch = source.get()
                 if ch == '=':
-                    table.append((TYPE['MOV'], ch))
+                    lex_table.append((TYPE['MOV'], ch))
                     continue
                 else:
                     print_error(source, 'see : but no =, did you mean := ?')
                     break
             elif ch == ';':
-                table.append((TYPE['EOS'], ch))
+                lex_table.append((TYPE['EOS'], ch))
                 continue
             elif ch == '+':
-                table.append((TYPE['PLUS'], ch))
+                lex_table.append((TYPE['PLUS'], ch))
                 continue
             elif ch == '-':
-                table.append((TYPE['DEC'], ch))
+                lex_table.append((TYPE['DEC'], ch))
                 continue
             elif ch == '*':
-                table.append((TYPE['MUL'], ch))
+                lex_table.append((TYPE['MUL'], ch))
                 continue
             elif ch == '(':
-                table.append((TYPE['LP'], ch))
+                lex_table.append((TYPE['LP'], ch))
                 continue
             elif ch == ')':
-                table.append((TYPE['RP'], ch))
+                lex_table.append((TYPE['RP'], ch))
                 continue
             elif ch == '/':
                 ch = source.get()
@@ -173,7 +170,7 @@ def lex():
                         ch = source.get()
                 else:
                     source.back()
-                    table.append((TYPE['DIV'], ch))
+                    lex_table.append((TYPE['DIV'], ch))
 
                 continue
 
@@ -186,5 +183,5 @@ def print_error(source: Source, msg: str = ''):
 
 
 if __name__ == '__main__':
-    lex()
+    table = lex('test.pas')
     print(table)
