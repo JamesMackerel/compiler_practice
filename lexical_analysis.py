@@ -1,5 +1,6 @@
-from typing import List, Tuple
+from typing import *
 
+# all key words are in lower case, operators are in upper case
 TYPE = {
     'begin': 1,
     'end': 2,
@@ -27,13 +28,18 @@ TYPE = {
     'EOS': 24,  # End Of Sentence
     'integer': 25,
     'function': 26,
-    'LP': 27,
-    'RP': 28
+    'LP': 27,  # (
+    'RP': 28  # )
 }
 
 
 class Source:
-    def __init__(self, file: str):
+    """
+    represents a source file.
+    load all content to memory when initialize the object.
+    """
+
+    def __init__(self, file: str) -> None:
         with open(file) as f:
             self.source = f.read()
 
@@ -44,7 +50,11 @@ class Source:
         self.c = 0
         self.last_c = 0
 
-    def get(self) -> str:
+    def get(self) -> Optional[str]:
+        """
+        get next character
+        :return: next character if exists, else returns None
+        """
         try:
             ch = self.source[self.i]
         except IndexError:
@@ -60,7 +70,7 @@ class Source:
 
         return ch
 
-    def back(self):
+    def back(self) -> None:
         self.i -= 1
         if self.c == 0:
             self.r -= 1
@@ -72,9 +82,9 @@ class Source:
 def lex(source_path: str) -> List[Tuple]:
     """
     :param source_path: path to the source code file
-    :return:
+    :return: List of tuple, which stores key word and identifiers and its type
     """
-    lex_table = []  # type:tuple
+    lex_table = []  # type:List[Tuple]
     source = Source(source_path)
     while True:
         ch = source.get()
