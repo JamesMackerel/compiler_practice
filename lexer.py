@@ -1,4 +1,6 @@
 from typing import *
+from lextable import LexTable
+from source import Source
 
 # all key words are in lower case, operators are in upper case
 TYPE = {
@@ -33,59 +35,14 @@ TYPE = {
 }
 
 
-class Source:
-    """
-    represents a source file.
-    load all content to memory when initialize the object.
-    """
 
-    def __init__(self, file: str) -> None:
-        with open(file) as f:
-            self.source = f.read()
-
-        self.source += '\n'
-
-        self.i = 0
-        self.r = 0
-        self.c = 0
-        self.last_c = 0
-
-    def get(self) -> Optional[str]:
-        """
-        get next character
-        :return: next character if exists, else returns None
-        """
-        try:
-            ch = self.source[self.i]
-        except IndexError:
-            return None
-
-        self.i += 1
-        self.c += 1
-
-        if ch == '\n':
-            self.last_c = self.c
-            self.r += 1
-            self.c = 0
-
-        return ch
-
-    def back(self) -> None:
-        self.i -= 1
-        if self.c == 0:
-            self.r -= 1
-            self.c = self.last_c
-        else:
-            self.c -= 1
-
-
-def lex(source_path: str) -> List[Tuple]:
+def lex(source_path: str) -> LexTable:
     """
     :param source_path: path to the source code file
     :return: List of tuple, which stores key word and identifiers and its type
     """
-    lex_table = []  # type:List[Tuple]
     source = Source(source_path)
+    lex_table = LexTable(source)  # type:LexTable
     while True:
         ch = source.get()
         if ch in ['\n', '\r', ' ']:
@@ -194,4 +151,4 @@ def print_error(source: Source, msg: str = ''):
 
 if __name__ == '__main__':
     table = lex('test.pas')
-    print(table)
+    print(table.table)
