@@ -1,3 +1,4 @@
+program test;
 begin
   integer k;
   integer function F(n);
