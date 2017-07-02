@@ -1,0 +1,75 @@
+<SL>: <S>
+    | <S>;<SL>
+
+<S>: <AS>
+    | <CS>
+    | <WHILE>
+    | <MS>
+
+<AS>: <V>:=<E>
+
+<CS>: IF <RS> THEN <S> ELSE <S>
+
+<WHILE>: WHILE <RS> DO <S>
+
+<MS>: begin<SL>end
+
+<E>: <T>
+    | <E>+<T>
+    | <E>-<T>
+
+<T>: <F>
+    | <T>*<F>
+    | <T>/<F>
+
+<F>: <V>
+    | INT
+    | (<E>)
+
+<RS>: <E><OP><E>
+
+<V>: ID
+
+<OP>: <
+    | <=
+    | ==
+    | >
+    | >=
+    | <>
+
+%%
+SL -> S SL1
+SL1 -> ; SL | EPSILON
+S -> AS | CS | WHILE | MS
+AS -> V := E
+CS -> if RS then S else S
+WHILE -> while RS do S
+MS -> begin SL end
+
+E -> T E1
+E1 -> + T E1 | - T E1 | EPSILON
+
+T -> F T1
+T1 -> * F T1 | / F T1 | EPSILON
+
+F -> V | int | ( E )
+RS -> E OP E
+V -> id
+OP -> < | <= | == | > | >= | <>
+%%
+
+%%
+SL: Statement List
+S: Statement
+AS: Asignment Statement
+CS: Conditional Statement
+WHILE: while statement
+MS: multiple statements
+RS: Relational Statement
+E: Expression
+T: Term
+F: Factor
+V: Variable
+INT: integer
+ID: identifier
+%%
