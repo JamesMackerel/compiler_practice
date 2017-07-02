@@ -16,7 +16,7 @@ class Source:
         self.i = 0  # index
         self.r = 0  # row
         self.c = 0  # column
-        self.last_c = 0
+        self.columns = []  # type: List[int]
 
     def get(self) -> Optional[str]:
         """
@@ -32,7 +32,7 @@ class Source:
         self.c += 1
 
         if ch == '\n':
-            self.last_c = self.c
+            self.columns.append(self.c)
             self.r += 1
             self.c = 0
 
@@ -40,9 +40,9 @@ class Source:
 
     def back(self) -> None:
         self.i -= 1
-        if self.c == 0:
+        if self.c == 0: # at the start of line
             self.r -= 1
-            self.c = self.last_c
+            self.c = self.columns.pop()
         else:
             self.c -= 1
 
@@ -51,5 +51,4 @@ class Source:
         get current position
         :return: (row, column)
         """
-        return self.r+1, self.c
-
+        return self.r + 1, self.c
