@@ -8,8 +8,19 @@ class Lexeme:
         self.content = lex_content
         self.position = lex_position
 
-    def __str__(self):
+    def __repr__(self):
         return '({0}, {1}, ({2}, {3}))'.format(self.type, self.content, self.position[0], self.position[1])
+
+    def __str__(self):
+        return str(self.content)
+
+    def __getitem__(self, item):
+        if item == 0:
+            return self.type
+        elif item == 1:
+            return self.content
+        elif item == 2:
+            return self.position
 
 
 class LexTable:
@@ -18,7 +29,7 @@ class LexTable:
         self.i = 0  # type:int
         self.source = source
 
-    def get(self):
+    def get(self) -> Lexeme:
         try:
             word = self.table[self.i]
             # self.i += 1

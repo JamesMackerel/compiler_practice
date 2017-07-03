@@ -1,5 +1,6 @@
 from lextable import LexTable
 from source import Source
+from compileerror import CompileError
 
 # all key words are in lower case, operators are in upper case
 TYPE = {
@@ -30,12 +31,11 @@ TYPE = {
 }
 
 
-def lex(source_path: str) -> LexTable:
+def lex(source: Source) -> LexTable:
     """
     :param source_path: path to the source code file
     :return: List of tuple, which stores key word and identifiers and its type
     """
-    source = Source(source_path)
     lex_table = LexTable(source)  # type:LexTable
     while True:
         ch = source.get()
@@ -77,7 +77,7 @@ def lex(source_path: str) -> LexTable:
                 if ch == '=':
                     lex_table.append((TYPE['<='], ch))
                 elif ch == '>':
-                    lex_table.append((TYPE['<>'], ch))
+                    lex_table.append((TYPE['<>'], '<>'))
                 else:
                     source.back()
                     lex_table.append((TYPE['<'], ch))
@@ -151,8 +151,10 @@ def lex(source_path: str) -> LexTable:
 
 def print_error(source: Source, msg: str = ''):
     print(msg + (' at row:%d, col:%d' % (source.r, source.c)))
+    raise CompileError(msg, (source.r, source.c))
 
 
 if __name__ == '__main__':
-    table = lex('test.pas')
+    source = Source('test.pas')
+    table = lex(source)
     print(table.table)

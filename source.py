@@ -7,16 +7,21 @@ class Source:
     load all content to memory when initialize the object.
     """
 
-    def __init__(self, file: str) -> None:
-        with open(file) as f:
-            self.source = f.read()
+    def __init__(self, file: str = None) -> None:
+        if file is not None:
+            with open(file) as f:
+                self.source = f.read()
 
-        self.source += '\n'
+            self.source += '\n'
 
         self.i = 0  # index
         self.r = 0  # row
         self.c = 0  # column
         self.columns = []  # type: List[int]
+
+    def set_source(self, source:str):
+        self.source = source
+        self.source += '\n'
 
     def get(self) -> Optional[str]:
         """

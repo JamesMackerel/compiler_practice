@@ -1,41 +1,17 @@
-<SL>: <S>
-    | <S>;<SL>
-
-<S>: <AS>
-    | <CS>
-    | <WHILE>
-    | <MS>
-
-<AS>: <V>:=<E>
-
-<CS>: IF <RS> THEN <S> ELSE <S>
-
-<WHILE>: WHILE <RS> DO <S>
-
-<MS>: begin<SL>end
-
-<E>: <T>
-    | <E>+<T>
-    | <E>-<T>
-
-<T>: <F>
-    | <T>*<F>
-    | <T>/<F>
-
-<F>: <V>
-    | INT
-    | (<E>)
-
-<RS>: <E><OP><E>
-
-<V>: ID
-
-<OP>: <
-    | <=
-    | ==
-    | >
-    | >=
-    | <>
+%%
+SL -> S | S ; SL
+S -> AS | CS | WHILE| MS
+AS -> V := E
+CS -> if RS then S else S
+WHILE -> while RS do S
+MS -> begin SL end
+E -> T | E + T | E - T
+T -> F | T * F | T / F
+F -> V | int | ( E )
+RS -> E OP E
+V -> id
+OP -> < | <= | == | > | >= | <>
+%%
 
 %%
 SL -> S SL1
