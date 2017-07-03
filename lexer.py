@@ -147,6 +147,7 @@ def lex(source: Source) -> LexTable:
 
             else:
                 print('error at line:%d column%d' % (source.r, source.c))
+                raise CompileError('error', (source.r, source.c))
 
 
 def print_error(source: Source, msg: str = ''):
