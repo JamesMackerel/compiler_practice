@@ -57,7 +57,7 @@ class Parser:
         self.quadruple.append(Label(self.t_label))
         self.t_label += 1
 
-    def variable(self) -> str:
+    def variable(self):
         """
         V -> ID
         :return:
@@ -69,7 +69,7 @@ class Parser:
         else:
             raise CompileError('Expect an identifier, but not found.', self.table.position())
 
-    def integer(self) -> int:
+    def integer(self):
         """
         <INT>: number
         :return:
@@ -209,7 +209,6 @@ class Parser:
         """
         if self.table.match(TYPE['while']):
             self.table.advance()
-            begin = len(self.quadruple)
             arg1 = self.relational_statement()
 
             if self.table.match(TYPE['do']):
